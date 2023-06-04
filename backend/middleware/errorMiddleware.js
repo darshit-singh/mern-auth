@@ -14,11 +14,14 @@ const errorHandler = (err, req, res, next) => {
 
   let message = err.message;
 
+  //specific type of error in mongoose is claled CastError
+  //ex. when you're trying to get a user with an ObjectId that doesn't exist
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
-    statusCode = 404;
-    message = 'Resource not found';
+    statusCode = 404; //not found
+    message = 'Resource not found, Cast Error from mongoose';
   }
 
+  //stack trace only for development - shows files and line numbers, from where the error came.
   res.status(statusCode).json({
     message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
