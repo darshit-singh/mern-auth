@@ -10,12 +10,18 @@ const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
 
+//middleware for reading request data
+app.use(express.json()); //allows us to parse raw JSON
+app.use(express.urlencoded({ extended: true })); //allows us to send form data
+
+//middleware for routing
 app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is Ready!');
 });
 
+//middleware for custom errors
 app.use(notFound);
 app.use(errorHandler);
 

@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-
+import User from '../models/userModel.js';
 //we're gonna use async-handler because mongoose methods return a promise and we wanna use async await. We can use try catch but using async handlers will wrap around each controller function and would allow us to use custom error handler
 
 //@desc     Auth user/set token
@@ -19,9 +19,40 @@ const authUser = asyncHandler(async (req, res) => {
 //@route    POST /api/users
 //@access   Public
 const registerUser = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    message: 'Register User',
+  //when new user registers we need all this information from the request body. Have added middlewares so express can access the body.
+  const { name, email, password } = req.body;
+
+  //when we get the details in the request we want to check if the user already exists.
+  //all model methods return a promise.
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400); //client error
+    throw new Error('User already exists'); //this will use the error handler that we created.
+  }
+
+  //create the user since it doesn't exist
+  const user = await User.create({
+    name,
+    email,
+    password, //password hashed in userModel.js
   });
+
+  if (user) {
+    //successful, something created
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
+
+  // res.status(200).json({
+  //   message: 'Register User',
+  // });
 });
 
 //@desc     Logout user
