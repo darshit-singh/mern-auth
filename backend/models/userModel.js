@@ -38,6 +38,12 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 }); //before we save
 
+//to add methods directly to the user
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+  //this.password is the hashed password in the db
+};
+
 const User = mongoose.model('User', userSchema);
 //name of the model, schema
 
