@@ -104,6 +104,30 @@ const getUserProfile = asyncHandler(async (req, res) => {
 //@route    PUT /api/users/profile
 //@access   Private - {means, you'll need to have a valid JWT to access this}
 const updateUserProfile = asyncHandler(async (req, res) => {
+  //we have the user in req.user but can't use that since it doesn't have the hashed password. We also want to be able to update password here.
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name; //if new name not included, let the old name stay
+    user.email = req.body.email || user.email;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    const updatedUser = await user.save();
+    res.status(200).json({
+      message: 'User Updated',
+      data: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
   res.status(200).json({
     message: 'Update user profile',
   });
