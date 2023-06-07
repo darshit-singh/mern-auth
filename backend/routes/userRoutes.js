@@ -2,6 +2,7 @@
 
 //We will link the controller to this routes file
 import express from 'express';
+import { protect } from '../middleware/authMiddleware.js';
 import {
   authUser,
   registerUser,
@@ -22,6 +23,10 @@ router.post('/', registerUser);
 router.post('/logout', logoutUser);
 
 //note the usage of router.route for a common endpoint. We could create these two separately with the same route. But it is cleaner to do it this way.
-router.route('/profile').get(getUserProfile).put(updateUserProfile);
+router
+  .route('/profile')
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
 
+//adding protect(middleware) argument protects that route.
 export default router;
