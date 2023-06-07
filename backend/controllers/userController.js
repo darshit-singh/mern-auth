@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
+import destroyCookie from '../utils/destroyCookie.js';
 //we're gonna use async-handler because mongoose methods return a promise and we wanna use async await. We can use try catch but using async handlers will wrap around each controller function and would allow us to use custom error handler
 
 //@desc     Auth user/set token
@@ -77,10 +78,7 @@ const registerUser = asyncHandler(async (req, res) => {
 //@access   Public
 const logoutUser = asyncHandler(async (req, res) => {
   //just destroy the cookie here
-  res.cookie('jwt', '', {
-    httpOnly: true,
-    expires: new Date(0),
-  });
+  destroyCookie(res);
   res.status(200).json({
     message: 'User logged out',
   });
