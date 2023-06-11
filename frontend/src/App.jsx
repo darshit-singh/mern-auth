@@ -1,11 +1,12 @@
 import React from 'react'
 import Header from './components/Header'
+import HomeScreen from './screens/HomeScreen'
 
 const App = () => {
   return (
     <div>
       <Header />
-      <h1>Start up</h1>
+      <HomeScreen />
     </div>
   )
 }
