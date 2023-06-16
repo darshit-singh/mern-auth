@@ -5,12 +5,13 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import 'bootstrap/dist/css/bootstrap.css'
 import './index.css'
 import HomeScreen from './screens/HomeScreen.jsx'
+import LoginScreen from './screens/LoginScreen.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
       <Route index={true} path='/' element={<HomeScreen />} />
-      <Route path='/login' element={<h1>login</h1>} />
+      <Route path='/login' element={<LoginScreen />} />
       <Route path='/register' element={<h1>register</h1>} />
     </Route>
   )
